@@ -33,7 +33,7 @@ class ItemDataSource(private val service: QiitaService) : PageKeyedDataSource<In
         _networkState.postValue(NetworkState.RUNNING)
         try {
             val response = service.getItems(page, perPage).execute().body()
-            callback(response, page)
+            callback(response, page + 1)
             _networkState.postValue(NetworkState.SUCCESS)
         } catch (e: Exception) {
             _networkState.postValue(NetworkState.FAILED)
