@@ -1,6 +1,7 @@
 package jp.kaleidot725.sample.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import jp.kaleidot725.sample.R
@@ -26,9 +27,8 @@ class MainActivity : AppCompatActivity() {
 
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.viewModel = viewModel
-
         viewModel.items.observe(this, androidx.lifecycle.Observer {
-            binding.itemRecyclerView.update(it)
+            binding.itemRecyclerView.submitList(it)
         })
     }
 }

@@ -1,7 +1,7 @@
 package jp.kaleidot725.sample
 
+import jp.kaleidot725.sample.data.repository.ItemDataSourceFactory
 import jp.kaleidot725.sample.ui.MainViewModel
-import kaleidot725.sample.data.repository.ItemRepository
 import kaleidot725.sample.data.service.QiitaService
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -22,7 +22,7 @@ val appModule = module {
     }
 
     single {
-        ItemRepository(get())
+        ItemDataSourceFactory(get())
     }
 
     viewModel {
