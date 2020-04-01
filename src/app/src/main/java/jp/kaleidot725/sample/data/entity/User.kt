@@ -1,4 +1,4 @@
-package kaleidot725.sample.data.entity
+package jp.kaleidot725.sample.data.entity
 
 data class User(
     val description: String,

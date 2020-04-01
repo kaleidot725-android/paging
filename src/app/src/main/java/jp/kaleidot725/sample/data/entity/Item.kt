@@ -1,4 +1,6 @@
-package kaleidot725.sample.data.entity
+package jp.kaleidot725.sample.data.entity
+
+import jp.kaleidot725.sample.data.entity.*
 
 data class Item(
     val body: String,

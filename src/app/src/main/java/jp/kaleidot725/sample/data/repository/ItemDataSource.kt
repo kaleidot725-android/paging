@@ -1,42 +1,47 @@
 package jp.kaleidot725.sample.data.repository
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import jp.kaleidot725.sample.data.entity.NetworkState
-import kaleidot725.sample.data.service.QiitaService
-import kaleidot725.sample.data.entity.Item
+import jp.kaleidot725.sample.data.service.QiitaService
+import jp.kaleidot725.sample.data.entity.Item
 import java.lang.Exception
 
 class ItemDataSource(private val service: QiitaService) : PageKeyedDataSource<Int, Item>() {
-    private val _networkState = MutableLiveData<NetworkState>()
-    val networkState = _networkState
+    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Item>) {}
 
-    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Item>) {
+    // API呼び出しをしているので、本来であればここで例外の対処を記述する必要がありますが省略しています。
+    override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Item>) {
+        // 1 ページ目のデータを取得する
+        val page = 1
 
+        // 1 ページに表示するデータ数
+        val perPage = params.requestedLoadSize
+
+        // ページに表示するデータを取得する
+        val items = service.getItems(page, perPage).execute().body()
+
+        // 次に表示するページの番号を計算する
+        val nextPage = page + 1
+
+        // 取得したデータ、次に表示するページの番号を結果として返す
+        callback.onResult(items, null, nextPage)
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Item>) {
-        Log.v("TAG", "${params.key}")
-        callAPI(params.key, params.requestedLoadSize) { items, next ->
-            callback.onResult(items, next)
-        }
-    }
+        // params.key には 前の loadInitial や loadAfter の呼び出しで返した nextPage が格納されている
+        val page = params.key // 1 ページ目のデータを取得する
 
-    override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Item>) {
-        callAPI(1, params.requestedLoadSize) { items, next ->
-            callback.onResult(items, null, next)
-        }
-    }
+        // params.requestedLoadSize には 1ページに表示するデータ数が格納されている。
+        val perPage = params.requestedLoadSize
 
-    private fun callAPI(page: Int, perPage: Int, callback: (items: List<Item>, next: Int?) -> Unit) {
-        _networkState.postValue(NetworkState.RUNNING)
-        try {
-            val response = service.getItems(page, perPage).execute().body()
-            callback(response, page + 1)
-            _networkState.postValue(NetworkState.SUCCESS)
-        } catch (e: Exception) {
-            _networkState.postValue(NetworkState.FAILED)
-        }
+        // ページに表示するデータを取得する
+        val items = service.getItems(page, perPage).execute().body()
+
+        // 次に表示するページの番号を計算する
+        val nextPage = page + 1
+
+        // 取得したデータ、次に表示するページの番号を結果として返す
+        callback.onResult(items,   nextPage)
     }
 }
