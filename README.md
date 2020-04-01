@@ -366,7 +366,6 @@ class MainActivity : AppCompatActivity() {
 
 ```
 
-<img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/79387/8398cf9f-74e3-6293-52ae-d8e82a07289e.gif" width=250>
 
 # おわりに
 
